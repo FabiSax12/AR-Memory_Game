@@ -41,7 +41,7 @@ def generate_game(amount: int):
 
 def round(lvl: int):
   for player in players.keys():
-    game = generate_game(levels[lvl - 1][1])
+    game = generate_game(lvl[1])
     print(f"{player} memoriza lo siguiente: {game}")
     time.sleep(2)
     round_time = round(ar.start_sorting(game,flip_image=False, show_images=True), 2)
