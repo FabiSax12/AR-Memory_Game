@@ -47,11 +47,16 @@ def round(lvl: int):
     round_time = round(ar.start_sorting(game,flip_image=False, show_images=True), 2)
     players[player][lvl].append(round_time)
 
+def play_level(level: int):
+  for x in range(4):
+    round(level)
+  
 def main():
   amount_of_players = request_data()
   init_players(amount_of_players)
   
-  round(1)
+  for lvl in levels:
+    play_level(lvl)
 
   print(players)
 
