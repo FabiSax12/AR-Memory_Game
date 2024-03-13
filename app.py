@@ -79,7 +79,7 @@ def play_round(lvl: int):
 def level_report(lvl):
   print(f"Reporte del nivel {lvl}")
   for player in players.keys():
-    report = f"{player} {players[player][f"Nivel {lvl}"]} seg"
+    report = f"{player}: {players[player][f"Nivel {lvl}"]} seg"
     print(report)
 
 def play_level(level: int):
@@ -96,6 +96,15 @@ def play_level(level: int):
   
   level_report(level[0])
 
+def game_report():
+  print(f"Reporte de la partida")
+  for player in players.keys():
+    player_info = players[player]
+    player_info["Tiempo Total"] = player_info["Nivel 1"] + player_info["Nivel 2"] + player_info["Nivel 3"]
+
+    report = f"{player}: {player_info["Tiempo Total"]} seg"
+    print(report)
+
 def main():
   """
     Main function to run the game.
@@ -105,5 +114,7 @@ def main():
   
   for lvl in levels:
     play_level(lvl)
+  
+  game_report()
 
 main()
