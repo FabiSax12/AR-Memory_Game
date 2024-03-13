@@ -2,19 +2,18 @@ import ARMem as ar
 import random
 import time
 
-# (level, marks)
-levels = [(1, 3), (2, 4), (3, 5)]
-
-# Recording of each player's data, like a NoSQL database.
-# Each player contains the data of his username, time per level and total time.
+# Grabación de los datos de cada jugador, similar a una base de datos NoSQL.
+# Cada jugador contiene los datos de su nombre de usuario, tiempo por nivel y tiempo total.
 players: dict = {}
+config: dict = {
+  "time_sleep": 0
+}
 
-# Game functions
 def request_data() -> dict:
-  """Prompt the user for all necessary information to customize the game.
+  """Solicita al usuario toda la información necesaria para personalizar el juego.
 
-    Returns:
-        dict: All information obtained from the user.
+  Returns:
+      dict: Toda la información obtenida del usuario.
   """
   amount_of_players = int(input("Cantidad de jugadores: "))
 
@@ -22,17 +21,18 @@ def request_data() -> dict:
     print("La cantidad de jugadores debe ser un número entero mayor a 0")
     amount_of_players = int(input("Cantidad de jugadores: "))
 
+  config["time_sleep"] = int(input("Tiempo para memorizar la secuencia (segundos): "))
+
   return amount_of_players
 
 def init_players(amount: int = 1):
-  """Initialize player data structure.
+  """Inicializa la estructura de datos de los jugadores.
 
-    Args:
-        amount (int, optional): Number of players. Defaults to 1.
+  Args:
+      amount (int, opcional): Número de jugadores. Por defecto es 1.
   """
-  
   for n in range(amount):
-    new_player = (input(f"Nombre del jugador {n+1}: "))
+    new_player = input(f"Nombre del jugador {n+1}: ")
     players[new_player] = {
       "Nivel 1": 0,
       "Nivel 2": 0,
@@ -40,14 +40,14 @@ def init_players(amount: int = 1):
       "Tiempo Total": 0
     }
 
-def generate_game(amount: int):
-  """Generate a random game sequence.
+def generate_game(amount: int) -> list:
+  """Genera una secuencia de juego aleatoria.
 
-    Args:
-        amount (int): Length of the game sequence.
+  Args:
+      amount (int): Longitud de la secuencia de juego.
 
-    Returns:
-        list: Randomly generated game sequence.
+  Returns:
+      list: Secuencia de juego generada aleatoriamente.
   """
 
   game = []
@@ -60,60 +60,69 @@ def generate_game(amount: int):
 
   return game
 
-def play_round(lvl: int): 
-  """Execute a round of the game for each player.
+def play_round(level: int, marks: int): 
+  """Ejecuta una ronda del juego para cada jugador.
 
-    Args:
-        level (int): Current level of the game.
+  Args:
+      level (int): Nivel actual del juego.
+      marks (int): Cantidad actual de marcas del juego.
   """
 
   for player in players.keys():
-    game = generate_game(lvl[1])
+    game = generate_game(marks)
     print(f"{player} memoriza lo siguiente: {game}")
-    # time.sleep(2)
+
+    for countdown in range(config["time_sleep"], 0, -1):
+      print(countdown)
+      time.sleep(1)
+    
     # round_time = round(ar.start_sorting(game,flip_image=False, show_images=True), 2)
     round_time = round(random.random() * 10)
-    # time.sleep(round_time)
-    players[player][f"Nivel {lvl[0]}"] += round_time
+    players[player][f"Nivel {level}"] += round_time
 
-def level_report(lvl):
-  print(f"Reporte del nivel {lvl}")
+def level_report(level: int):
+  """Genera un informe del nivel especificado.
+
+  Args:
+      level (int): Nivel del juego.
+  """
+  print(f"Reporte del nivel {level}")
   for player in players.keys():
-    report = f"{player}: {players[player][f"Nivel {lvl}"]} seg"
+    report = f"{player}: {players[player][f'Nivel {level}']} seg"
     print(report)
 
-def play_level(level: int):
-  """Play a specific level of the game.
+def play_level(level: int, marks: int):
+  """Juega un nivel específico del juego.
 
-    Args:
-        level (int): Level of the game to play.
+  Args:
+      level (int): Nivel del juego a jugar.
+      marks (int): Cantidad de marcas del nivel.
   """
-  print(f"Nivel {level[0]}")
+  print(f"Nivel {level}")
 
-  for x in range(5):
-    print(f"Ronda {x + 1}")
-    play_round(level)
+  for round in range(1, 6):
+    print(f"Ronda {round}")
+    play_round(level, marks)
   
-  level_report(level[0])
+  level_report(level)
 
 def game_report():
+  """Genera un informe completo del juego."""
   print(f"Reporte de la partida")
   for player in players.keys():
     player_info = players[player]
     player_info["Tiempo Total"] = player_info["Nivel 1"] + player_info["Nivel 2"] + player_info["Nivel 3"]
 
-    report = f"{player}: {player_info["Tiempo Total"]} seg"
+    report = f"{player}: {player_info['Tiempo Total']} seg"
     print(report)
 
 def main():
-  """
-    Main function to run the game.
-  """
+  """Función principal para ejecutar el juego."""
   amount_of_players = request_data()
   init_players(amount_of_players)
   
-  for lvl in levels:
-    play_level(lvl)
+  for level in range(1, 4):
+    play_level(level, level + 2)
   
   game_report()
 
