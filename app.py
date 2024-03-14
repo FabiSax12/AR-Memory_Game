@@ -11,28 +11,30 @@ config: dict = {
 }
 
 def request_data() -> dict:
-  """Solicita al usuario toda la información necesaria para personalizar el juego.
-
-  Returns:
-      dict: Toda la información obtenida del usuario.
   """
+    Solicita al usuario toda la información necesaria para personalizar el juego.
+  """
+  terminal.clear()
+  config["time_sleep"] = int(input("Tiempo para memorizar la secuencia (segundos): "))
+
+def init_players():
+  """
+    Inicializa la estructura de datos de los jugadores.
+  """
+  terminal.clear()
   amount_of_players = int(input("Cantidad de jugadores: "))
 
   while amount_of_players <= 0:
     print("La cantidad de jugadores debe ser un número entero mayor a 0")
     amount_of_players = int(input("Cantidad de jugadores: "))
 
-  config["time_sleep"] = int(input("Tiempo para memorizar la secuencia (segundos): "))
+  players.clear()
+  for n in range(amount_of_players):
+    if len(players.fromkeys(players)) > 0:
+      print(f"Jugadores: {", ".join(players.fromkeys(players))}")
+    else:
+      print("Aún no hay jugadores")
 
-  return amount_of_players
-
-def init_players(amount: int = 1):
-  """Inicializa la estructura de datos de los jugadores.
-
-  Args:
-      amount (int, opcional): Número de jugadores. Por defecto es 1.
-  """
-  for n in range(amount):
     new_player = input(f"Nombre del jugador {n+1}: ")
     players[new_player] = {
       "Nivel 1": 0,
@@ -40,6 +42,7 @@ def init_players(amount: int = 1):
       "Nivel 3": 0,
       "Tiempo Total": 0
     }
+    terminal.clear_line(2)
 
 def generate_game(amount: int) -> list:
   """Genera una secuencia de juego aleatoria.
@@ -127,7 +130,9 @@ def play_level(level: int, marks: int):
     print(f"Ronda {round}")
     play_round(level, marks)
   
+  terminal.clear()
   level_report(level)
+  input("Presiona 'ENTER' para continuar")
   terminal.clear()
 
 def game_report():
@@ -140,19 +145,46 @@ def game_report():
     report = f"{player}: {player_info['Tiempo Total']} seg"
     print(report)
 
+def start_game():
+  terminal.clear()
+  for level in range(1, 4):
+    play_level(level, level + 2)
+
+def menu():
+  while True:
+    terminal.clear()
+    print("(1) Registrar jugadores")
+    print("(2) Configurar partida")
+    print("(3) Iniciar partida")
+    print("(4) Reestablecer datos")
+    option = int(input("Opción: "))
+
+    if option == 1: init_players()
+    elif option == 2: request_data()
+    elif option == 3: break
+    elif option == 4:
+      players.clear()
+      config["time_sleep"] = 0
+
+def end_menu():
+  terminal.clear()
+  print("(1) Volver a jugar")
+  print("(2) Salir")
+
+  option = int(input("Opción: "))
+
+  if option == 1: main()
+  elif option == 2:
+    print("Gracias por jugar!!")
+    return False
+
 def main():
   """Función principal para ejecutar el juego."""
   terminal.clear()
-
-  amount_of_players = request_data()
-  init_players(amount_of_players)
-  
-  terminal.clear()
-  # Inicio del juego
-
-  for level in range(1, 4):
-    play_level(level, level + 2)
-  
+  menu()
+  start_game()
   game_report()
+  input("Presiona 'ENTER' para finalizar")
+  end_menu()
 
-main()
+main() 
