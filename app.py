@@ -1,6 +1,7 @@
 import ARMem as ar
 import random
 import time
+import terminal
 
 # Grabación de los datos de cada jugador, similar a una base de datos NoSQL.
 # Cada jugador contiene los datos de su nombre de usuario, tiempo por nivel y tiempo total.
@@ -68,17 +69,30 @@ def play_round(level: int, marks: int):
       marks (int): Cantidad actual de marcas del juego.
   """
 
+
   for player in players.keys():
     game = generate_game(marks)
-    print(f"{player} memoriza lo siguiente: {game}")
 
+    terminal.color("Regular", "White")
+    print(f"{player} memoriza lo siguiente:")
+    
+    terminal.color("Regular", "Green")
+    print(game)
+    
+    terminal.color("Bold High Intensity", "Red")
     for countdown in range(config["time_sleep"], 0, -1):
       print(countdown)
       time.sleep(1)
+      if countdown == 1: 
+        terminal.clear_line(3)
+      else:
+        terminal.clear_line(1)
     
     # round_time = round(ar.start_sorting(game,flip_image=False, show_images=True), 2)
     round_time = round(random.random() * 10)
     players[player][f"Nivel {level}"] += round_time
+
+  terminal.clear_line(1)
 
 def level_report(level: int):
   """Genera un informe del nivel especificado.
@@ -98,13 +112,23 @@ def play_level(level: int, marks: int):
       level (int): Nivel del juego a jugar.
       marks (int): Cantidad de marcas del nivel.
   """
+
+  if level == 1:
+    terminal.color("Bold", "Green")
+  elif level == 2:
+    terminal.color("Bold", "Yellow")
+  elif level == 3:
+    terminal.color("Bold", "Red")
+    
   print(f"Nivel {level}")
 
   for round in range(1, 6):
+    terminal.color("Regular", "Cyan")
     print(f"Ronda {round}")
     play_round(level, marks)
   
   level_report(level)
+  terminal.clear()
 
 def game_report():
   """Genera un informe completo del juego."""
@@ -118,9 +142,14 @@ def game_report():
 
 def main():
   """Función principal para ejecutar el juego."""
+  terminal.clear()
+
   amount_of_players = request_data()
   init_players(amount_of_players)
   
+  terminal.clear()
+  # Inicio del juego
+
   for level in range(1, 4):
     play_level(level, level + 2)
   
