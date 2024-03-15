@@ -7,7 +7,14 @@ import terminal
 # Cada jugador contiene los datos de su nombre de usuario, tiempo por nivel y tiempo total.
 players: dict = {}
 config: dict = {
-  "time_sleep": 0
+  "time_sleep": 3,
+  "image_set": "fruits",
+}
+
+# Sets de imagenes que están disponibles para usar
+image_sets = {
+  "fruits": ["Piña", "Cereza", "Uva", "Pera", "Guanabana"],
+  "pc_components": ["CPU", "Gráfica", "RAM", "SSD", "Motherboard"]
 }
 
 def request_data() -> dict:
@@ -16,6 +23,14 @@ def request_data() -> dict:
   """
   terminal.clear()
   config["time_sleep"] = int(input("Tiempo para memorizar la secuencia (segundos): "))
+
+  terminal.clear()
+  print("Personaliza las imagenes para jugar...")
+  print("1) Frutas")
+  print("2) Componentes de PC")
+  option = int(input("Set de imágenes: "))
+  if option == 1: config["image_set"] = "fruits"
+  elif option == 2: config["image_set"] = "pc_components"
 
 def init_players():
   """
@@ -64,6 +79,21 @@ def generate_game(amount: int) -> list:
 
   return game
 
+def ids_to_image_name(ids: list) -> list:
+    """
+    Convierte una lista de identificadores de imágenes en una lista de nombres de imágenes.
+
+    Args:
+        ids (list): Una lista de identificadores de imágenes.
+
+    Returns:
+        list: Una lista de nombres de imágenes correspondientes a los identificadores proporcionados.
+    """
+    image_names = []
+    for id in ids:
+        image_names.insert(id, image_sets[config["image_set"]][id])
+    return image_names
+
 def play_round(level: int, marks: int): 
   """Ejecuta una ronda del juego para cada jugador.
 
@@ -72,15 +102,15 @@ def play_round(level: int, marks: int):
       marks (int): Cantidad actual de marcas del juego.
   """
 
-
   for player in players.keys():
     game = generate_game(marks)
+    game_names = ids_to_image_name(game)
 
     terminal.color("Regular", "White")
     print(f"{player} memoriza lo siguiente:")
     
     terminal.color("Regular", "Green")
-    print(game)
+    print(game_names)
     
     terminal.color("Bold High Intensity", "Red")
     for countdown in range(config["time_sleep"], 0, -1):
@@ -91,8 +121,8 @@ def play_round(level: int, marks: int):
       else:
         terminal.clear_line(1)
     
-    # round_time = round(ar.start_sorting(game,flip_image=False, show_images=True), 2)
-    round_time = round(random.random() * 10)
+    round_time = round(ar.start_sorting(game, config["image_set"], flip_image=False, show_images=True), 2)
+    # round_time = round(random.random() * 10)
     players[player][f"Nivel {level}"] += round_time
 
   terminal.clear_line(1)
@@ -156,15 +186,11 @@ def menu():
     print("(1) Registrar jugadores")
     print("(2) Configurar partida")
     print("(3) Iniciar partida")
-    print("(4) Reestablecer datos")
     option = int(input("Opción: "))
 
     if option == 1: init_players()
     elif option == 2: request_data()
     elif option == 3: break
-    elif option == 4:
-      players.clear()
-      config["time_sleep"] = 0
 
 def end_menu():
   terminal.clear()

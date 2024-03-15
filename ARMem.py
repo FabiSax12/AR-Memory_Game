@@ -28,7 +28,7 @@ The 'time' module provides various time-related functions.
 import time
 
 
-def start_sorting(sorted_list, flip_image:bool=False, show_identified_marker:bool=False, show_images:bool=True, show_ids:bool=False, show_coordinates:bool=False)->float:
+def start_sorting(sorted_list, images_set, flip_image:bool=False, show_identified_marker:bool=False, show_images:bool=True, show_ids:bool=False, show_coordinates:bool=False)->float:
     """Starts marker recognition and stops when it determines the pattern of their arrangement.
 
     Args:
@@ -96,7 +96,7 @@ def start_sorting(sorted_list, flip_image:bool=False, show_identified_marker:boo
                         # Path of this file
                         current_dir = os.path.dirname(os.path.abspath(__file__))
                         # Path of the image asociated with the marker id.
-                        image_path = os.path.join(current_dir, 'images', f'{ids[i][0]}.png')
+                        image_path = os.path.join(current_dir, 'images', images_set,f'{ids[i][0]}.png')
                         # Read the image fron url
                         image_to_overlay = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
                         frame[cY:cY+100, cX:cX+100] = image_to_overlay
