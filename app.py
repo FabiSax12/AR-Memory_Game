@@ -17,6 +17,12 @@ image_sets = {
   "pc_components": ["CPU", "Gráfica", "RAM", "SSD", "Motherboard"]
 }
 
+def error_message(msj: str, duration: int):
+  terminal.clear()
+  terminal.color("Regular", "Red")
+  print(msj)
+  time.sleep(duration)
+
 def request_data() -> dict:
   """
     Solicita al usuario toda la información necesaria para personalizar el juego.
@@ -106,6 +112,7 @@ def play_round(level: int, marks: int):
     game = generate_game(marks)
     game_names = ids_to_image_name(game)
 
+    terminal.clear()
     terminal.color("Regular", "White")
     print(f"{player} memoriza lo siguiente:")
     
@@ -122,7 +129,6 @@ def play_round(level: int, marks: int):
         terminal.clear_line(1)
     
     round_time = round(ar.start_sorting(game, config["image_set"], flip_image=False, show_images=True), 2)
-    # round_time = round(random.random() * 10)
     players[player][f"Nivel {level}"] += round_time
 
   terminal.clear_line(1)
@@ -208,7 +214,12 @@ def main():
   """Función principal para ejecutar el juego."""
   terminal.clear()
   menu()
-  start_game()
+  if players != {}:
+    start_game()
+  else:
+    error_message("Debe añadir al menos 1 jugador para iniciar la partida", 3)
+    main()
+
   game_report()
   input("Presiona 'ENTER' para finalizar")
   end_menu()
