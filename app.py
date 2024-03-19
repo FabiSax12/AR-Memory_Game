@@ -1,3 +1,10 @@
+"""
+Fabian Vargas y Kenneth Araya
+
+https://github.com/FabiSax12/AR-Memory_Game
+
+"""
+
 import ARMem as ar
 import random
 import time
@@ -18,6 +25,16 @@ image_sets = {
 }
 
 def error_message(msj: str, duration: int):
+  """
+  Muestra un mensaje de error en la terminal y luego limpia la pantalla después de un cierto tiempo.
+
+  Args:
+      msj (str): El mensaje de error que se mostrará en la terminal.
+      duration (int): La duración en segundos durante la cual se mostrará el mensaje de error antes de limpiar la pantalla.
+
+  Returns:
+      None
+  """
   terminal.clear()
   terminal.color("Regular", "Red")
   print(msj)
@@ -173,6 +190,13 @@ def play_level(level: int, marks: int):
   terminal.clear()
 
 def generate_ranking():
+  """
+    Genera un ranking de jugadores ordenado por el tiempo total acumulado en el juego.
+
+    Returns:
+        list: Una lista de tuplas ordenadas en función del tiempo total acumulado por cada jugador.
+              Cada tupla contiene el nombre del jugador y su información asociada.
+  """
   ranking = sorted(players.items(), key=lambda player: player[1]["Tiempo Total"])
 
   return ranking
@@ -198,11 +222,16 @@ def game_report():
       print(report)
 
 def start_game():
+  """Inicia el juego, ejecutando los niveles del 1 al 3."""
   terminal.clear()
   for level in range(1, 4):
     play_level(level, level + 2)
 
 def menu():
+  """
+    Muestra un menú interactivo con opciones para registrar jugadores, configurar la partida o iniciar la partida.
+  """
+
   while True:
     terminal.clear()
     print("(1) Registrar jugadores")
@@ -215,6 +244,9 @@ def menu():
     elif option == 3: break
 
 def end_menu():
+  """
+    Muestra un menú de finalización con opciones para volver a jugar o salir del juego.
+  """
   terminal.clear()
   print("(1) Volver a jugar")
   print("(2) Salir")
