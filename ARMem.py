@@ -99,7 +99,9 @@ def start_sorting(sorted_list, images_set, flip_image:bool=False, show_identifie
                         image_path = os.path.join(current_dir, 'images', images_set,f'{ids[i][0]}.png')
                         # Read the image fron url
                         image_to_overlay = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
-                        frame[cY:cY+100, cX:cX+100] = image_to_overlay
+                        # Convertir la imagen RGBA a RGB
+                        image_to_overlay_rgb = cv2.cvtColor(image_to_overlay, cv2.COLOR_RGBA2RGB)
+                        frame[cY:cY+100, cX:cX+100] = image_to_overlay_rgb
                     except:
                         print ("We can't read or draw the image on the marker")
                 

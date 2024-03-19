@@ -8,7 +8,7 @@ import terminal
 players: dict = {}
 config: dict = {
   "time_sleep": 3,
-  "image_set": "fruits",
+  "image_set": "fruits"
 }
 
 # Sets de imagenes que están disponibles para usar
@@ -43,11 +43,12 @@ def init_players():
     Inicializa la estructura de datos de los jugadores.
   """
   terminal.clear()
-  amount_of_players = int(input("Cantidad de jugadores: "))
 
-  while amount_of_players <= 0:
-    print("La cantidad de jugadores debe ser un número entero mayor a 0")
+  try:
     amount_of_players = int(input("Cantidad de jugadores: "))
+  except:
+    error_message("La cantidad de jugadores debe ser un número entero mayor a 0", 2)
+    init_players()
 
   players.clear()
   for n in range(amount_of_players):
@@ -127,8 +128,8 @@ def play_round(level: int, marks: int):
         terminal.clear_line(3)
       else:
         terminal.clear_line(1)
-    round_time = round(random.random() * 10, 2)
-    # round_time = round(ar.start_sorting(game, config["image_set"], flip_image=True, show_images=True), 2)
+    # round_time = round(random.random() * 10, 2)
+    round_time = round(ar.start_sorting(game, config["image_set"], flip_image=True, show_images=True), 2)
     players[player][f"Nivel {level}"] += round_time
 
   terminal.clear_line(1)
