@@ -127,8 +127,8 @@ def play_round(level: int, marks: int):
         terminal.clear_line(3)
       else:
         terminal.clear_line(1)
-    
-    round_time = round(ar.start_sorting(game, config["image_set"], flip_image=False, show_images=True), 2)
+    round_time = round(random.random() * 10, 2)
+    # round_time = round(ar.start_sorting(game, config["image_set"], flip_image=True, show_images=True), 2)
     players[player][f"Nivel {level}"] += round_time
 
   terminal.clear_line(1)
@@ -171,15 +171,30 @@ def play_level(level: int, marks: int):
   input("Presiona 'ENTER' para continuar")
   terminal.clear()
 
+def generate_ranking():
+  ranking = sorted(players.items(), key=lambda player: player[1]["Tiempo Total"])
+
+  return ranking
+
 def game_report():
   """Genera un informe completo del juego."""
-  print(f"Reporte de la partida")
   for player in players.keys():
     player_info = players[player]
     player_info["Tiempo Total"] = player_info["Nivel 1"] + player_info["Nivel 2"] + player_info["Nivel 3"]
 
-    report = f"{player}: {player_info['Tiempo Total']} seg"
-    print(report)
+  ranking = generate_ranking()
+  print(f"Reporte de la partida")
+  print("")
+
+  for player in ranking:
+    if ranking.index(player) == 0:
+      terminal.color("Bold", "Green")
+      print(f"Felicidades {player[0]}!! Has ganado con {player[1]['Tiempo Total']} seg")
+      print("")
+      terminal.color("Regular", "White")
+    else:
+      report = f"{ranking.index(player) + 1}. {player[0]}: {player[1]['Tiempo Total']} seg"
+      print(report)
 
 def start_game():
   terminal.clear()
