@@ -130,7 +130,6 @@ def play_round(level: int, marks: int):
     game = generate_game(marks)
     game_names = ids_to_image_name(game)
 
-    terminal.clear()
     terminal.color("Regular", "White")
     print(f"{player} memoriza lo siguiente:")
     
